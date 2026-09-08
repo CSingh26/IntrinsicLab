@@ -41,3 +41,18 @@ def test_workbench_is_served_with_functional_assets():
     assert 'id="valuation-form"' in response.text
     assert client.get('/static/app.js').status_code == 200
     assert client.get('/static/styles.css').status_code == 200
+
+
+def test_nonfinite_and_unknown_inputs_do_not_escape_validation(assumptions):
+    import json
+    body=assumptions.model_dump(mode='json') | {'revenue':float('nan')}
+    response=client.post('/api/valuations', content=json.dumps(body), headers={'Content-Type':'application/json'})
+    assert response.status_code == 422
+    assert 'Input should be a finite number' in response.text
+    assert 'NaN' not in response.text
+
+
+def test_inconsistent_peer_currency_returns_error(assumptions):
+    peer=dict(company='Example',currency='USD',price=20,shares=10,debt=10,cash=2,revenue=20,ebitda=2,net_income=1,book_equity=5)
+    response=client.post('/api/comparables',json={'peers':[peer,peer|{'currency':'EUR'}],'source':assumptions.source.model_dump(mode='json')})
+    assert response.status_code == 422
