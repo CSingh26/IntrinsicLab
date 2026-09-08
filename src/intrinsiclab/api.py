@@ -73,3 +73,16 @@ def comparables(payload: PeerImport) -> dict[str, Any]:
         raise ValueError('Normalize peer financials to one currency before comparison')
     return {'peers': [trading_multiples(peer) for peer in payload.peers],
             'source': payload.source.model_dump(mode='json')}
+
+# The installed wheel contains the same browser assets used during development.
+from pathlib import Path  # noqa: E402
+from fastapi.responses import FileResponse  # noqa: E402
+from fastapi.staticfiles import StaticFiles  # noqa: E402
+
+STATIC_DIR = Path(__file__).parent / 'static'
+app.mount('/static', StaticFiles(directory=STATIC_DIR), name='static')
+
+
+@app.get('/', include_in_schema=False)
+def workbench() -> FileResponse:
+    return FileResponse(STATIC_DIR / 'index.html')

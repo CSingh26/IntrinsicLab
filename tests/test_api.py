@@ -32,3 +32,12 @@ def test_capital_and_import_routes(assumptions):
 def test_request_size_limit():
     result = client.post('/api/valuations', content='x' * 600_000)
     assert result.status_code == 413
+
+
+def test_workbench_is_served_with_functional_assets():
+    response = client.get('/')
+    assert response.status_code == 200
+    assert 'IntrinsicLab' in response.text
+    assert 'id="valuation-form"' in response.text
+    assert client.get('/static/app.js').status_code == 200
+    assert client.get('/static/styles.css').status_code == 200
