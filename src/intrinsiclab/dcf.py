@@ -18,18 +18,22 @@ class Valuation(Contract):
 
 def value_company(model: ValuationAssumptions) -> Valuation:
     forecast = project_cash_flows(model)
-    if model.terminal_method != 'gordon':
-        raise ValueError('Unsupported terminal method')
-    if model.terminal_growth >= model.wacc:
-        raise ValueError('Terminal growth must be below WACC')
-    reinvestment_rate = model.terminal_growth / model.terminal_roic
-    if reinvestment_rate >= 1:
-        raise ValueError('Terminal ROIC must exceed positive terminal growth')
-    # Growth requires reinvestment; ROIC converts the growth target into a cash requirement.
-    terminal_nopat = (forecast[-1].revenue * (1 + model.terminal_growth)
-                      * model.terminal_margin * (1 - model.tax_rate))
-    terminal_fcff = terminal_nopat * (1 - reinvestment_rate)
-    terminal_value = terminal_fcff / (model.wacc - model.terminal_growth)
+    terminal_fcff: float | None = None
+    if model.terminal_method == 'exit_multiple':
+        if forecast[-1].ebitda <= 0:
+            raise ValueError('Exit multiple requires positive final-year EBITDA')
+        terminal_value = forecast[-1].ebitda * model.exit_multiple
+    else:
+        if model.terminal_growth >= model.wacc:
+            raise ValueError('Terminal growth must be below WACC')
+        reinvestment_rate = model.terminal_growth / model.terminal_roic
+        if reinvestment_rate >= 1:
+            raise ValueError('Terminal ROIC must exceed positive terminal growth')
+        # Growth requires reinvestment; ROIC translates growth into a cash requirement.
+        terminal_nopat = (forecast[-1].revenue * (1 + model.terminal_growth)
+                          * model.terminal_margin * (1 - model.tax_rate))
+        terminal_fcff = terminal_nopat * (1 - reinvestment_rate)
+        terminal_value = terminal_fcff / (model.wacc - model.terminal_growth)
     discounted = [row.fcff / (1 + model.wacc) ** (i + 1) for i, row in enumerate(forecast)]
     discounted_terminal = terminal_value / (1 + model.wacc) ** len(forecast)
     enterprise = sum(discounted) + discounted_terminal
