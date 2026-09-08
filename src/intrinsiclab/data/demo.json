@@ -1,0 +1,15 @@
+{
+  "company": "Northstar Industrial — fictional", "currency": "USD", "base_year": 2025,
+  "source": {"provider": "IntrinsicLab synthetic teaching model", "as_of": "2026-09-08", "mode": "DEMO DATA", "reference": "No security or issuer is represented", "transformation": "Explicit annual operating assumptions; monetary amounts and shares in millions"},
+  "revenue": 1000, "opening_nwc": 100,
+  "years": [
+    {"growth": 0.10, "operating_margin": 0.18, "da_ratio": 0.03, "capex_ratio": 0.06, "nwc_ratio": 0.10},
+    {"growth": 0.08, "operating_margin": 0.19, "da_ratio": 0.03, "capex_ratio": 0.055, "nwc_ratio": 0.10},
+    {"growth": 0.06, "operating_margin": 0.20, "da_ratio": 0.03, "capex_ratio": 0.05, "nwc_ratio": 0.10},
+    {"growth": 0.05, "operating_margin": 0.20, "da_ratio": 0.03, "capex_ratio": 0.045, "nwc_ratio": 0.10},
+    {"growth": 0.04, "operating_margin": 0.20, "da_ratio": 0.03, "capex_ratio": 0.04, "nwc_ratio": 0.10}
+  ],
+  "tax_rate": 0.25, "wacc": 0.09, "terminal_method": "gordon", "terminal_growth": 0.025,
+  "terminal_margin": 0.20, "terminal_roic": 0.15, "exit_multiple": 10,
+  "debt": 250, "cash": 80, "preferred_equity": 0, "noncontrolling_interests": 0, "shares": 50
+}
