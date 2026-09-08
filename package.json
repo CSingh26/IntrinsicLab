@@ -1,0 +1,1 @@
+{"name":"intrinsiclab-workbench","private":true,"type":"module","scripts":{"check":"node --check src/intrinsiclab/static/app.js && node --check src/intrinsiclab/static/charts.js","test:browser":"playwright test"},"devDependencies":{"@playwright/test":"1.63.0"}}

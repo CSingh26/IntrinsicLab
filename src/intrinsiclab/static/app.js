@@ -5,12 +5,14 @@ const form = $('#valuation-form');
 const rateFields = ['tax_rate','wacc','terminal_growth','terminal_margin','terminal_roic'];
 const driverFields = ['growth','operating_margin','da_ratio','capex_ratio','nwc_ratio'];
 let model, result, requestId = 0;
-const cases = [];
+let cases = [];
+try { const saved=JSON.parse(localStorage.getItem('intrinsiclab-cases-v1')||'[]'); if(Array.isArray(saved))cases=saved.filter(c=>c?.assumptions?.company&&c?.valuation?.price_per_share!=null).slice(0,10); } catch { /* Corrupt browser storage cannot replace computed results. */ }
+function persistCases(){try{localStorage.setItem('intrinsiclab-cases-v1',JSON.stringify(cases));}catch{error('Browser storage unavailable. Export evidence to preserve cases.');}}
 const number = (v, digits=1) => v == null ? 'Unavailable' : new Intl.NumberFormat('en-US',{maximumFractionDigits:digits,minimumFractionDigits:digits}).format(v);
 const escape = (s) => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const el = (name) => form.elements.namedItem(name);
 function error(message) { $('#error').textContent = message; $('#error').hidden = !message; }
-function clearResults() { result = undefined; $('#summary').innerHTML='<p>Assumptions changed. Recalculate to inspect the updated valuation.</p>'; for (const id of ['warnings','forecast','sensitivity','forecast-chart','value-bridge']) $('#'+id).replaceChildren(); $('#export').disabled = true; }
+function clearResults() { ++requestId; result = undefined; $('#summary').innerHTML='<p>Assumptions changed. Recalculate to inspect the updated valuation.</p>'; for (const id of ['warnings','forecast','sensitivity','forecast-chart','value-bridge']) $('#'+id).replaceChildren(); $('#export').disabled = true; }
 async function api(route, body) {
   const response = await fetch(route, body ? {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)} : {});
   const data = await response.json();
@@ -52,7 +54,7 @@ function render(data) {
   document.dispatchEvent(new CustomEvent('valuation-rendered',{detail:data}));
 }
 async function calculate() {
-  const id=++requestId; clearResults();error('');$('#calculate').disabled=true;
+  clearResults();const id=++requestId; error('');$('#calculate').disabled=true;
   try { const next=currentModel(), data=await api('/api/valuations',next);if(id!==requestId) return;model=next;render(data); }
   catch(e) { if(id===requestId) error(e.message); }
   finally { if(id===requestId) $('#calculate').disabled=false; }
@@ -63,7 +65,7 @@ $$('[data-tab]').forEach(button=>button.addEventListener('click',()=>{ $$('[data
 $('#reset').addEventListener('click',async()=>{try{fill(await api('/api/demo'));await calculate();}catch(e){error(e.message);}});
 $('#add-year').addEventListener('click',()=>{if(model.years.length>=15)return;model=currentModel();model.years.push({...model.years.at(-1)});drawDrivers();clearResults();});
 $('#remove-year').addEventListener('click',()=>{if(model.years.length<=1)return;model=currentModel();model.years.pop();drawDrivers();clearResults();});
-$('#import').addEventListener('change',async e=>{try{const raw=await readJson(e.target.files[0]);if(!raw)return;const next=raw.assumptions||raw;const valid=await api('/api/valuations',next);fill(valid.assumptions);render(valid);error('');}catch(e){clearResults();error('Model unavailable: '+e.message);}});
+$('#import').addEventListener('change',async e=>{clearResults();const importId=++requestId;try{const raw=await readJson(e.target.files[0]);if(!raw)return;const next=raw.assumptions||raw;const valid=await api('/api/valuations',next);if(importId!==requestId)return;fill(valid.assumptions);render(valid);error('');}catch(e){clearResults();error('Model unavailable: '+e.message);}});
 $('#export').addEventListener('click',()=>{if(result)download('intrinsiclab-evidence.json',result);});
 $('#capital-form').addEventListener('submit',async e=>{
   e.preventDefault();$('#capital-result').replaceChildren();error('');
@@ -76,5 +78,6 @@ $('#peer-example').onclick=()=>download('intrinsiclab-peers.json',{source:{provi
 $('#peer-import').onchange=async e=>{try{const payload=await readJson(e.target.files[0]);if(!payload)return;const r=await api('/api/comparables',payload);$('#peer-results').innerHTML=`<p>${escape(r.source.mode)} · ${escape(r.source.provider)}</p><table><thead><tr><th>Company</th><th>P/E</th><th>EV/EBITDA</th><th>EV/Sales</th><th>P/Book</th></tr></thead><tbody>${r.peers.map(p=>`<tr><td>${escape(p.company)}</td>${['pe','ev_ebitda','ev_sales','price_book'].map(k=>`<td title="${escape(p[k].reason||'Multiple')} ">${p[k].value==null?'N/M':number(p[k].value,2)+'×'}</td>`).join('')}</tr>`).join('')}</tbody></table>`;error('');}catch(e){$('#peer-results').replaceChildren();error(e.message);}};
 $('#csv-import').onchange=async e=>{try{const file=e.target.files[0];if(!file)return;if(file.size>250000)throw new Error('CSV exceeds 250 KB');const provider=$('#statement-source').value.trim();if(!provider)throw new Error('Enter the statement source before importing');const source={provider,as_of:new Date().toISOString().slice(0,10),mode:'USER INPUT',reference:file.name,retrieved_at:new Date().toISOString(),transformation:'Uploaded annual CSV; millions; no currency conversion'};const r=await api('/api/statements/normalize',{content:await file.text(),source});$('#statement-results').innerHTML=`<pre>${escape(JSON.stringify(r,null,2))}</pre><button id="apply-statements">Apply latest annual base</button>`;$('#apply-statements').onclick=()=>{const row=r.rows.at(-1);model=currentModel();Object.assign(model,{base_year:row.fiscal_year,currency:row.currency,revenue:row.revenue,opening_nwc:row.nwc,source});fill(model);$('[data-tab="valuation"]').click();calculate();};error('');}catch(e){$('#statement-results').replaceChildren();error(e.message);}};
 function renderCases(){ $('#cases').innerHTML=cases.map((c,i)=>`<div class="case"><span>${escape(c.assumptions.company)}<br><small>${escape(c.currency)} ${number(c.valuation.price_per_share,2)} / share · WACC ${number(c.assumptions.wacc*100)}%</small></span><button type="button" class="secondary" data-case="${i}">Restore</button></div>`).join('');$$('[data-case]').forEach(b=>b.onclick=()=>{fill(cases[Number(b.dataset.case)].assumptions);calculate();}); }
-$('#save-case').onclick=()=>{if(!result){error('Recalculate before saving a case.');return;}if(cases.length>=10){error('This session holds at most 10 cases. Export evidence to keep more.');return;}cases.push(structuredClone(result));renderCases();};
+$('#save-case').onclick=()=>{if(!result){error('Recalculate before saving a case.');return;}if(cases.length>=10){error('This session holds at most 10 cases. Export evidence to keep more.');return;}cases.push(structuredClone(result));persistCases();renderCases();};
+renderCases();
 try { fill(await api('/api/demo'));await calculate(); }catch(e){error('Data unavailable: '+e.message);}

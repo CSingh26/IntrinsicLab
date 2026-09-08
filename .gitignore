@@ -10,3 +10,6 @@ dist/
 !.env.example
 *.sqlite*
 node_modules/
+
+test-results/
+playwright-report/
