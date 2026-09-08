@@ -1,0 +1,308 @@
+{
+  "model_id": "4e9d3121367117c4",
+  "engine_version": "1.0.0",
+  "source": {
+    "provider": "IntrinsicLab synthetic teaching model",
+    "as_of": "2026-09-08",
+    "mode": "DEMO DATA",
+    "reference": "No security or issuer is represented",
+    "retrieved_at": null,
+    "transformation": "Explicit annual operating assumptions; monetary amounts and shares in millions"
+  },
+  "currency": "USD",
+  "units": "millions except per-share values",
+  "valuation": {
+    "forecast": [
+      {
+        "year": 2026,
+        "revenue": 1100.0,
+        "ebit": 198.0,
+        "cash_taxes": 49.5,
+        "nopat": 148.5,
+        "da": 33.0,
+        "ebitda": 231.0,
+        "capex": 66.0,
+        "nwc": 110.0,
+        "change_nwc": 10.0,
+        "fcff": 105.5
+      },
+      {
+        "year": 2027,
+        "revenue": 1188.0,
+        "ebit": 225.72,
+        "cash_taxes": 56.43,
+        "nopat": 169.29,
+        "da": 35.64,
+        "ebitda": 261.36,
+        "capex": 65.34,
+        "nwc": 118.80000000000001,
+        "change_nwc": 8.800000000000011,
+        "fcff": 130.79
+      },
+      {
+        "year": 2028,
+        "revenue": 1259.28,
+        "ebit": 251.856,
+        "cash_taxes": 62.964,
+        "nopat": 188.892,
+        "da": 37.7784,
+        "ebitda": 289.63439999999997,
+        "capex": 62.964,
+        "nwc": 125.928,
+        "change_nwc": 7.127999999999986,
+        "fcff": 156.57840000000002
+      },
+      {
+        "year": 2029,
+        "revenue": 1322.244,
+        "ebit": 264.4488,
+        "cash_taxes": 66.1122,
+        "nopat": 198.3366,
+        "da": 39.66732,
+        "ebitda": 304.11612,
+        "capex": 59.50097999999999,
+        "nwc": 132.2244,
+        "change_nwc": 6.2964000000000055,
+        "fcff": 172.20654
+      },
+      {
+        "year": 2030,
+        "revenue": 1375.13376,
+        "ebit": 275.026752,
+        "cash_taxes": 68.756688,
+        "nopat": 206.270064,
+        "da": 41.2540128,
+        "ebitda": 316.2807648,
+        "capex": 55.0053504,
+        "nwc": 137.513376,
+        "change_nwc": 5.288975999999991,
+        "fcff": 187.2297504
+      }
+    ],
+    "discounted_fcff": [
+      96.78899082568806,
+      110.08332631933337,
+      120.90725381439334,
+      121.99545444630716,
+      121.68649123376517
+    ],
+    "terminal_fcff": 176.189013,
+    "terminal_value": 2710.6002,
+    "discounted_terminal_value": 1761.7041456865718,
+    "enterprise_value": 2333.1656623260587,
+    "net_claims": 170.0,
+    "equity_value": 2163.1656623260587,
+    "price_per_share": 43.26331324652117,
+    "terminal_share_of_ev": 0.7550703210376557
+  },
+  "sensitivity": {
+    "axis": "terminal_growth",
+    "columns": [
+      0.015000000000000001,
+      0.02,
+      0.025,
+      0.030000000000000002,
+      0.035
+    ],
+    "rows": [
+      {
+        "wacc": 0.06999999999999999,
+        "values": [
+          {
+            "price": 57.56356893804229,
+            "reason": null
+          },
+          {
+            "price": 60.71349178059946,
+            "reason": null
+          },
+          {
+            "price": 64.54160966892883,
+            "reason": null
+          },
+          {
+            "price": 69.30224574519502,
+            "reason": null
+          },
+          {
+            "price": 75.39505066137095,
+            "reason": null
+          }
+        ]
+      },
+      {
+        "wacc": 0.08,
+        "values": [
+          {
+            "price": 47.82100342512148,
+            "reason": null
+          },
+          {
+            "price": 49.72878516853234,
+            "reason": null
+          },
+          {
+            "price": 51.96642008473187,
+            "reason": null
+          },
+          {
+            "price": 54.632864125556715,
+            "reason": null
+          },
+          {
+            "price": 57.87105366588197,
+            "reason": null
+          }
+        ]
+      },
+      {
+        "wacc": 0.09,
+        "values": [
+          {
+            "price": 40.68658460728868,
+            "reason": null
+          },
+          {
+            "price": 41.88930677972508,
+            "reason": null
+          },
+          {
+            "price": 43.26331324652117,
+            "reason": null
+          },
+          {
+            "price": 44.851425081266925,
+            "reason": null
+          },
+          {
+            "price": 46.7120346570395,
+            "reason": null
+          }
+        ]
+      },
+      {
+        "wacc": 0.09999999999999999,
+        "values": [
+          {
+            "price": 35.239404409052725,
+            "reason": null
+          },
+          {
+            "price": 36.01540326480431,
+            "reason": null
+          },
+          {
+            "price": 36.883483969674195,
+            "reason": null
+          },
+          {
+            "price": 37.863378348473454,
+            "reason": null
+          },
+          {
+            "price": 38.98088955672425,
+            "reason": null
+          }
+        ]
+      },
+      {
+        "wacc": 0.11,
+        "values": [
+          {
+            "price": 30.946323829525465,
+            "reason": null
+          },
+          {
+            "price": 31.451717618146425,
+            "reason": null
+          },
+          {
+            "price": 32.0069686177095,
+            "reason": null
+          },
+          {
+            "price": 32.621425055266315,
+            "reason": null
+          },
+          {
+            "price": 33.30692801841565,
+            "reason": null
+          }
+        ]
+      }
+    ],
+    "units": "USD per share"
+  },
+  "sensitivity_range": {
+    "low": 30.946323829525465,
+    "high": 75.39505066137095
+  },
+  "interpretation": "This range measures sensitivity to specified assumptions; it is not a confidence interval or a market-price forecast.",
+  "warnings": [
+    "More than 75% of enterprise value comes from terminal assumptions."
+  ],
+  "assumptions": {
+    "company": "Northstar Industrial \u2014 fictional",
+    "currency": "USD",
+    "source": {
+      "provider": "IntrinsicLab synthetic teaching model",
+      "as_of": "2026-09-08",
+      "mode": "DEMO DATA",
+      "reference": "No security or issuer is represented",
+      "retrieved_at": null,
+      "transformation": "Explicit annual operating assumptions; monetary amounts and shares in millions"
+    },
+    "base_year": 2025,
+    "revenue": 1000.0,
+    "opening_nwc": 100.0,
+    "years": [
+      {
+        "growth": 0.1,
+        "operating_margin": 0.18,
+        "da_ratio": 0.03,
+        "capex_ratio": 0.06,
+        "nwc_ratio": 0.1
+      },
+      {
+        "growth": 0.08,
+        "operating_margin": 0.19,
+        "da_ratio": 0.03,
+        "capex_ratio": 0.055,
+        "nwc_ratio": 0.1
+      },
+      {
+        "growth": 0.06,
+        "operating_margin": 0.2,
+        "da_ratio": 0.03,
+        "capex_ratio": 0.05,
+        "nwc_ratio": 0.1
+      },
+      {
+        "growth": 0.05,
+        "operating_margin": 0.2,
+        "da_ratio": 0.03,
+        "capex_ratio": 0.045,
+        "nwc_ratio": 0.1
+      },
+      {
+        "growth": 0.04,
+        "operating_margin": 0.2,
+        "da_ratio": 0.03,
+        "capex_ratio": 0.04,
+        "nwc_ratio": 0.1
+      }
+    ],
+    "tax_rate": 0.25,
+    "wacc": 0.09,
+    "terminal_method": "gordon",
+    "terminal_growth": 0.025,
+    "terminal_margin": 0.2,
+    "terminal_roic": 0.15,
+    "exit_multiple": 10.0,
+    "debt": 250.0,
+    "cash": 80.0,
+    "preferred_equity": 0.0,
+    "noncontrolling_interests": 0.0,
+    "shares": 50.0
+  }
+}
