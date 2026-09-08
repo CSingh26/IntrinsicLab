@@ -1,3 +1,4 @@
+import './charts.js';
 const $ = (q) => document.querySelector(q);
 const $$ = (q) => [...document.querySelectorAll(q)];
 const form = $('#valuation-form');
