@@ -56,3 +56,13 @@ def test_inconsistent_peer_currency_returns_error(assumptions):
     peer=dict(company='Example',currency='USD',price=20,shares=10,debt=10,cash=2,revenue=20,ebitda=2,net_income=1,book_equity=5)
     response=client.post('/api/comparables',json={'peers':[peer,peer|{'currency':'EUR'}],'source':assumptions.source.model_dump(mode='json')})
     assert response.status_code == 422
+
+
+def test_extremely_small_peer_denominator_remains_unavailable(assumptions):
+    peer=dict(company='Example',currency='USD',price=20,shares=10,debt=10,cash=2,
+              revenue=20,ebitda=1e-310,net_income=1e-310,book_equity=5)
+    response=client.post('/api/comparables',json={'peers':[peer], 'source':assumptions.source.model_dump(mode='json')})
+    assert response.status_code == 200
+    assert response.json()['peers'][0]['pe']['value'] is None
+    assert response.json()['peers'][0]['ev_ebitda']['value'] is None
+    assert 'finite' in response.json()['peers'][0]['pe']['reason'].lower()

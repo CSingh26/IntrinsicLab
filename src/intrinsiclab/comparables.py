@@ -1,5 +1,6 @@
 """Relative valuation with compatible equity and enterprise denominators."""
 from typing import Any
+from math import isfinite
 from pydantic import Field
 from intrinsiclab.contracts import Contract, Finite, Nonnegative, Positive
 
@@ -24,7 +25,10 @@ def _ratio(numerator: float, denominator: float) -> dict[str, Any]:
         return {'value': None, 'reason': 'Nonpositive denominator; multiple is not meaningful'}
     if numerator < 0:
         return {'value': None, 'reason': 'Negative enterprise value; conventional multiple unavailable'}
-    return {'value': numerator / denominator, 'reason': None}
+    value = numerator / denominator
+    if not isfinite(value):
+        return {'value': None, 'reason': 'Nonfinite ratio; inspect denominator magnitude and units'}
+    return {'value': value, 'reason': None}
 
 
 def trading_multiples(peer: Comparable) -> dict[str, Any]:

@@ -19,3 +19,7 @@ Finance: FCFF, NOPAT, capital efficiency, CAPM/WACC, Gordon and exit-multiple te
 Core workbench accepts real user inputs and explicit fictional demo data, performs real calculations and exports reproducible evidence. No external data provider credentials are needed. The model is annual, nominal, single-currency, and assumes constant taxes with no loss carryforward. Terminal economics and equity claims require analyst judgment. It is a local research tool, not a publicly deployed multi-user service. Detailed limitations are in docs/LIMITATIONS.md.
 
 The exact latest SHA, CI result and clean/remote status are independently audited in the master portfolio report; report commits naturally follow the implementation SHA.
+
+## Numeric edge-case follow-up
+
+An API regression verifies that a tiny positive comparable denominator produces an explicitly unavailable multiple with a reason. The engine now returns this state directly instead of allowing a nonfinite value to reach serialization. Full Python suite: 35 passed.
